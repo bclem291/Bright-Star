@@ -1,0 +1,6 @@
+{
+  "name": "Bright Star College, Lekki",
+  "description": "Official website for Bright Star College, Lekki, Lagos, Nigeria. Delivering quality education, academic excellence, and character development in a disciplined and nurturing environment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
