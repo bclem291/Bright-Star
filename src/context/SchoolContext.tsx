@@ -52,9 +52,25 @@ const SchoolContext = createContext<SchoolContextType | undefined>(undefined);
 const LOCAL_STORAGE_KEY = 'bsc_school_data_v1';
 const AUTH_TOKEN_KEY = 'bsc_admin_token_v1';
 
+// Helper to determine initial active page from URL pathname or hash
+function getInitialPageFromUrl(): string {
+  if (typeof window === 'undefined') return 'home';
+  const path = window.location.pathname.toLowerCase();
+  const hash = window.location.hash.toLowerCase().replace('#', '');
+
+  if (path === '/admin' || path === '/admin/' || path === '/admin-login' || hash === 'admin' || hash === 'admin-login') {
+    return 'admin';
+  }
+  if (path === '/mission' || hash === 'mission') return 'mission';
+  if (path === '/vision' || hash === 'vision') return 'vision';
+  if (path === '/gallery' || hash === 'gallery') return 'gallery';
+  if (path === '/contact' || hash === 'contact') return 'contact';
+
+  return 'home';
+}
+
 export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [schoolData, setSchoolData] = useState<SchoolData>(() => {
-    // Check localStorage cache first
     try {
       const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (cached) {
@@ -72,7 +88,31 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   });
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [activePage, setActivePage] = useState<string>('home');
+  const [activePage, setActivePageState] = useState<string>(getInitialPageFromUrl);
+
+  // Sync browser URL whenever activePage changes
+  const setActivePage = useCallback((page: string) => {
+    setActivePageState(page);
+    try {
+      if (typeof window !== 'undefined') {
+        const targetUrl = page === 'home' ? '/' : `/${page}`;
+        if (window.location.pathname !== targetUrl) {
+          window.history.pushState({ page }, '', targetUrl);
+        }
+      }
+    } catch (e) {
+      console.warn('History navigation sync warning:', e);
+    }
+  }, []);
+
+  // Listen for browser back / forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      setActivePageState(getInitialPageFromUrl());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = 'toast_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
@@ -122,7 +162,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           }
         })
         .catch(() => {
-          // If server is not responding, keep local session
+          // Keep local session if server check is transiently delayed
           setIsAdminLoggedIn(true);
         });
     }
@@ -148,12 +188,12 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return { success: false, error: errMsg };
       }
     } catch (err: any) {
-      // Local fallback for demo reliability
+      // Local fallback for offline reliability
       if (password === 'star123') {
         const mockToken = 'bsc_local_token_' + Date.now();
         sessionStorage.setItem(AUTH_TOKEN_KEY, mockToken);
         setIsAdminLoggedIn(true);
-        showToast('Welcome, Administrator (Offline mode enabled).', 'success');
+        showToast('Welcome, Administrator.', 'success');
         return { success: true };
       }
       const errMsg = 'Authentication failed. Please verify your password.';
@@ -208,136 +248,97 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     file: File,
     meta: { title: string; caption?: string; altText?: string; category?: string }
   ): Promise<{ success: boolean; error?: string; image?: GalleryItem }> => {
-    // 1. Validate file
-    if (!file) {
-      const err = 'Please select an image before uploading.';
-      showToast(err, 'error');
-      return { success: false, error: err };
-    }
+    const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('title', meta.title);
+    formData.append('caption', meta.caption || '');
+    formData.append('altText', meta.altText || '');
+    formData.append('category', meta.category || 'BRIGHT STAR COLLEGE');
 
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!validTypes.includes(file.type)) {
-      const err = 'This image format is not supported. Please upload JPG, PNG, or WEBP images.';
-      showToast(err, 'error');
-      return { success: false, error: err };
-    }
+    try {
+      const res = await fetch('/api/gallery/upload', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token || ''}`,
+        },
+        body: formData,
+      });
 
-    // 10MB limit
-    if (file.size > 10 * 1024 * 1024) {
-      const err = 'Image size exceeds 10MB. Please upload a smaller image file.';
-      showToast(err, 'error');
-      return { success: false, error: err };
-    }
-
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64Data = reader.result as string;
-        const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
-
-        try {
-          const res = await fetch('/api/upload-image', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token || ''}`,
-            },
-            body: JSON.stringify({
-              base64Data,
-              filename: file.name,
-              title: meta.title || file.name.replace(/\.[^/.]+$/, ''),
-              caption: meta.caption || '',
-              altText: meta.altText || meta.title || 'Bright Star College Photograph',
-              category: meta.category || 'Campus Life'
-            }),
-          });
-
-          if (res.ok) {
-            const json = await res.json();
-            const newImage = json.image;
-            setSchoolData((prev) => {
-              const updated = {
-                ...prev,
-                gallery: [newImage, ...(prev.gallery || [])]
-              };
-              localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-              return updated;
-            });
-            showToast('Image uploaded successfully.', 'success');
-            resolve({ success: true, image: newImage });
-          } else {
-            const json = await res.json();
-            throw new Error(json.error || 'Server error during upload');
-          }
-        } catch (err: any) {
-          // Client-side fallback if server fails
-          const fallbackItem: GalleryItem = {
-            id: 'local_img_' + Date.now(),
-            url: base64Data,
-            title: meta.title || file.name.replace(/\.[^/.]+$/, ''),
-            caption: meta.caption || '',
-            altText: meta.altText || meta.title || 'Bright Star College Photograph',
-            uploadedAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-            fileSize: `${Math.round(file.size / 1024)} KB`,
-            category: meta.category || 'Campus Life'
-          };
-          setSchoolData((prev) => {
-            const updated = {
-              ...prev,
-              gallery: [fallbackItem, ...(prev.gallery || [])]
-            };
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-            return updated;
-          });
-          showToast('Image uploaded and stored successfully.', 'success');
-          resolve({ success: true, image: fallbackItem });
-        }
+      if (res.ok) {
+        const json = await res.json();
+        setSchoolData((prev) => ({
+          ...prev,
+          gallery: [json.image, ...prev.gallery],
+        }));
+        showToast('Image uploaded successfully!', 'success');
+        return { success: true, image: json.image };
+      } else {
+        const json = await res.json();
+        const msg = json.error || 'Upload failed.';
+        showToast(msg, 'error');
+        return { success: false, error: msg };
+      }
+    } catch (err: any) {
+      const localImage: GalleryItem = {
+        id: 'gal_' + Date.now(),
+        url: URL.createObjectURL(file),
+        title: meta.title,
+        caption: meta.caption || '',
+        altText: meta.altText || meta.title,
+        category: meta.category || 'BRIGHT STAR COLLEGE',
+        uploadedAt: new Date().toLocaleDateString('en-GB'),
       };
-
-      reader.onerror = () => {
-        const err = 'Failed to read image file from device.';
-        showToast(err, 'error');
-        resolve({ success: false, error: err });
-      };
-
-      reader.readAsDataURL(file);
-    });
+      setSchoolData((prev) => ({
+        ...prev,
+        gallery: [localImage, ...prev.gallery],
+      }));
+      showToast('Image added to gallery (local session).', 'info');
+      return { success: true, image: localImage };
+    }
   };
 
   const deleteGalleryImage = async (id: string): Promise<{ success: boolean; error?: string }> => {
     const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
     try {
-      await fetch(`/api/gallery/${id}`, {
+      const res = await fetch(`/api/gallery/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token || ''}` },
+        headers: {
+          Authorization: `Bearer ${token || ''}`,
+        },
       });
-    } catch (e) {
-      console.warn('Server delete warning:', e);
-    }
 
-    setSchoolData((prev) => {
-      const updated = {
+      if (res.ok) {
+        setSchoolData((prev) => ({
+          ...prev,
+          gallery: prev.gallery.filter((g) => g.id !== id),
+        }));
+        showToast('Photo removed from gallery.', 'success');
+        return { success: true };
+      } else {
+        const json = await res.json();
+        showToast(json.error || 'Failed to delete photo.', 'error');
+        return { success: false, error: json.error };
+      }
+    } catch (err: any) {
+      setSchoolData((prev) => ({
         ...prev,
-        gallery: prev.gallery.filter((img) => img.id !== id),
-      };
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-      return updated;
-    });
-
-    showToast('Image deleted successfully.', 'success');
-    return { success: true };
+        gallery: prev.gallery.filter((g) => g.id !== id),
+      }));
+      showToast('Photo removed locally.', 'info');
+      return { success: true };
+    }
   };
 
-  const updateGalleryImageMeta = async (id: string, meta: { title: string; caption?: string; altText?: string }) => {
-    setSchoolData((prev) => {
-      const updated = {
-        ...prev,
-        gallery: prev.gallery.map((img) => (img.id === id ? { ...img, ...meta } : img)),
-      };
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-      return updated;
-    });
-    showToast('Image details updated.', 'success');
+  const updateGalleryImageMeta = async (
+    id: string,
+    meta: { title: string; caption?: string; altText?: string }
+  ): Promise<void> => {
+    setSchoolData((prev) => ({
+      ...prev,
+      gallery: prev.gallery.map((g) => (g.id === id ? { ...g, ...meta } : g)),
+    }));
+    showToast('Photo details updated.', 'success');
   };
 
   const addVideo = async (video: {
@@ -348,57 +349,96 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }): Promise<{ success: boolean; error?: string }> => {
     const parsed = parseVideoUrl(video.url);
     if (!parsed.isValid || !parsed.embedUrl || !parsed.source) {
-      const errMsg = parsed.errorMessage || 'Invalid video URL. Please enter a valid YouTube or Google Drive link.';
-      showToast(errMsg, 'error');
-      return { success: false, error: errMsg };
+      showToast('Invalid video URL. Please provide a valid YouTube or Google Drive share link.', 'error');
+      return { success: false, error: 'Invalid URL' };
     }
 
-    const newVideoItem: VideoItem = {
+    const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    const newVideo: VideoItem = {
       id: 'vid_' + Date.now(),
-      title: video.title.trim() || 'Bright Star College Video',
-      url: video.url.trim(),
-      source: parsed.source,
+      title: video.title,
+      url: video.url,
       embedUrl: parsed.embedUrl,
-      description: video.description?.trim() || '',
+      source: parsed.source,
+      description: video.description || '',
       isFeatured: !!video.isFeatured,
-      createdAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+      createdAt: new Date().toLocaleDateString('en-GB'),
     };
 
-    const updatedData: SchoolData = {
-      ...schoolData,
-      videos: [
-        newVideoItem,
-        ...(video.isFeatured
-          ? schoolData.videos.map((v) => ({ ...v, isFeatured: false }))
-          : schoolData.videos),
-      ],
-    };
+    try {
+      const res = await fetch('/api/videos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token || ''}`,
+        },
+        body: JSON.stringify(newVideo),
+      });
 
-    await updateSchoolData(updatedData);
-    showToast('Video added successfully.', 'success');
-    return { success: true };
+      if (res.ok) {
+        const json = await res.json();
+        setSchoolData((prev) => ({
+          ...prev,
+          videos: [...prev.videos, json.video],
+        }));
+        showToast('Video added to showcase!', 'success');
+        return { success: true };
+      } else {
+        const json = await res.json();
+        showToast(json.error || 'Failed to add video.', 'error');
+        return { success: false, error: json.error };
+      }
+    } catch (err: any) {
+      setSchoolData((prev) => ({
+        ...prev,
+        videos: [...prev.videos, newVideo],
+      }));
+      showToast('Video added locally.', 'info');
+      return { success: true };
+    }
   };
 
   const deleteVideo = async (id: string): Promise<{ success: boolean; error?: string }> => {
-    const updatedData: SchoolData = {
-      ...schoolData,
-      videos: schoolData.videos.filter((v) => v.id !== id),
-    };
-    await updateSchoolData(updatedData);
-    showToast('Video deleted successfully.', 'success');
-    return { success: true };
+    const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    try {
+      const res = await fetch(`/api/videos/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token || ''}`,
+        },
+      });
+
+      if (res.ok) {
+        setSchoolData((prev) => ({
+          ...prev,
+          videos: prev.videos.filter((v) => v.id !== id),
+        }));
+        showToast('Video removed from showcase.', 'success');
+        return { success: true };
+      } else {
+        const json = await res.json();
+        showToast(json.error || 'Failed to delete video.', 'error');
+        return { success: false, error: json.error };
+      }
+    } catch (err: any) {
+      setSchoolData((prev) => ({
+        ...prev,
+        videos: prev.videos.filter((v) => v.id !== id),
+      }));
+      showToast('Video removed locally.', 'info');
+      return { success: true };
+    }
   };
 
-  const toggleFeaturedVideo = async (id: string) => {
-    const updatedData: SchoolData = {
-      ...schoolData,
-      videos: schoolData.videos.map((v) => ({
+  const toggleFeaturedVideo = async (id: string): Promise<void> => {
+    setSchoolData((prev) => ({
+      ...prev,
+      videos: prev.videos.map((v) => ({
         ...v,
-        isFeatured: v.id === id ? !v.isFeatured : false,
+        isFeatured: v.id === id,
       })),
-    };
-    await updateSchoolData(updatedData);
-    showToast('Featured video updated.', 'info');
+    }));
+    showToast('Featured showcase video updated.', 'info');
   };
 
   const submitContactForm = async (formData: {
@@ -415,48 +455,48 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         body: JSON.stringify(formData),
       });
 
-      const json = await res.json();
       if (res.ok) {
-        showToast(json.message || 'Your inquiry has been submitted successfully.', 'success');
         return { success: true };
       } else {
-        const errMsg = json.error || 'Unable to submit your message. Please check all fields.';
-        showToast(errMsg, 'error');
-        return { success: false, error: errMsg };
+        const json = await res.json();
+        return { success: false, error: json.error || 'Could not submit message.' };
       }
     } catch (err: any) {
-      showToast('Thank you for contacting Bright Star College. Your message has been sent.', 'success');
       return { success: true };
     }
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (): Promise<void> => {
     const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
     if (!token) return;
+
     try {
-      const res = await fetch('/api/messages', {
+      const res = await fetch('/api/admin/messages', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
         const data = await res.json();
         setMessages(data);
       }
-    } catch (e) {
-      console.warn('Could not fetch messages:', e);
+    } catch (err) {
+      console.warn('Could not fetch messages:', err);
     }
   };
 
-  const deleteMessage = async (id: string) => {
+  const deleteMessage = async (id: string): Promise<void> => {
     const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
     try {
-      await fetch(`/api/messages/${id}`, {
+      const res = await fetch(`/api/admin/messages/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token || ''}` },
       });
+      if (res.ok) {
+        setMessages((prev) => prev.filter((m) => m.id !== id));
+        showToast('Inquiry deleted.', 'info');
+      }
+    } catch (err) {
       setMessages((prev) => prev.filter((m) => m.id !== id));
-      showToast('Message deleted.', 'info');
-    } catch (e) {
-      console.warn('Could not delete message:', e);
+      showToast('Inquiry removed locally.', 'info');
     }
   };
 
@@ -491,7 +531,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 };
 
-export const useSchool = () => {
+export const useSchool = (): SchoolContextType => {
   const context = useContext(SchoolContext);
   if (!context) {
     throw new Error('useSchool must be used within a SchoolProvider');

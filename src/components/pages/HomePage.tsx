@@ -1,16 +1,8 @@
 import React from 'react';
 import { useSchool } from '../../context/SchoolContext';
-import { BrandedPlaceholder } from '../common/BrandedPlaceholder';
 import {
-  GraduationCap,
-  Users,
-  ShieldCheck,
-  HeartHandshake,
   Sparkles,
-  Award,
   ArrowRight,
-  BookOpen,
-  Compass,
   Video as VideoIcon,
   Image as ImageIcon,
   CheckCircle2,
@@ -32,189 +24,165 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'GraduationCap':
-        return <GraduationCap className="w-6 h-6 text-blue-700" />;
-      case 'Users':
-        return <Users className="w-6 h-6 text-blue-700" />;
-      case 'ShieldCheck':
-        return <ShieldCheck className="w-6 h-6 text-blue-700" />;
-      case 'HeartHandshake':
-        return <HeartHandshake className="w-6 h-6 text-blue-700" />;
-      case 'Sparkles':
-        return <Sparkles className="w-6 h-6 text-blue-700" />;
-      case 'Award':
-      default:
-        return <Award className="w-6 h-6 text-blue-700" />;
-    }
-  };
-
   // Featured video or first video
   const featuredVideo = videos.find((v) => v.isFeatured) || videos[0];
 
   return (
     <div className="space-y-20 pb-16">
-      {/* 1. HERO SECTION */}
-      <section className="relative bg-linear-to-b from-blue-950 via-blue-900 to-slate-900 text-white overflow-hidden py-16 md:py-24">
-        {/* Subtle Background Elements */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#facc15_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-        <div className="absolute top-1/4 right-5 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-5 left-5 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+      {/* 1. HERO SECTION WITH BACKGROUND PICTURE */}
+      <section className="relative text-white overflow-hidden py-24 md:py-32 min-h-[580px] flex items-center">
+        {/* Background School Picture */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-100 transition-transform duration-700"
+          style={{
+            backgroundImage: `url(${home.heroImageUrl || 'https://i.ibb.co/PvLmXqc3/312891.jpg'})`,
+          }}
+        />
+        {/* Deep, Balanced Overlays for Superior Photo Visibility & Pristine Text Contrast */}
+        <div className="absolute inset-0 bg-linear-to-r from-blue-950/85 via-blue-950/75 to-slate-950/70" />
+        <div className="absolute inset-0 bg-linear-to-t from-blue-950/90 via-transparent to-black/40" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Hero Copy */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-800/80 border border-amber-400/40 text-amber-300 text-xs font-semibold tracking-wider uppercase">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>BRIGHT STAR COLLEGE · LEKKI, LAGOS</span>
-              </div>
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-900/80 border border-amber-400/50 text-amber-300 text-xs font-semibold tracking-wider uppercase backdrop-blur-xs">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>BRIGHT STAR COLLEGE · PEACE ESTATE, LEKKI, LAGOS</span>
+          </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                {home.heroTitle || 'Building Bright Minds for a Brighter Future'}
-              </h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight max-w-4xl drop-shadow-md">
+            {home.heroTitle || 'Building Bright Minds for a Brighter Future'}
+          </h1>
 
-              <p className="text-base sm:text-lg text-blue-100/90 max-w-2xl font-normal leading-relaxed">
-                {home.heroSubtitle ||
-                  'Providing quality education in a nurturing, disciplined, and technologically enriched learning environment in Lekki, Lagos.'}
-              </p>
+          <p className="text-base sm:text-lg md:text-xl text-blue-100 max-w-3xl font-normal leading-relaxed drop-shadow-sm">
+            {home.heroSubtitle ||
+              'Providing qualitative education in a nurturing, disciplined, and technologically enriched learning environment in Peace Estate, Lekki, Lagos.'}
+          </p>
 
-              {/* CTAs */}
-              <div className="pt-2 flex flex-wrap items-center gap-4">
-                <button
-                  onClick={() => {
-                    const aboutSection = document.getElementById('about-section');
-                    aboutSection?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="bg-white hover:bg-slate-100 text-blue-950 font-bold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-sm tracking-wide uppercase inline-flex items-center gap-2"
-                >
-                  <span>{home.heroCtaPrimary || 'LEARN MORE'}</span>
-                  <ArrowRight className="w-4 h-4 text-blue-900" />
-                </button>
+          {/* CTAs */}
+          <div className="pt-2 flex flex-wrap items-center gap-4">
+            <button
+              onClick={() => {
+                const aboutSection = document.getElementById('about-section');
+                aboutSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="bg-white hover:bg-slate-100 text-blue-950 font-bold px-7 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-sm tracking-wide uppercase inline-flex items-center gap-2 cursor-pointer"
+            >
+              <span>{home.heroCtaPrimary || 'LEARN MORE'}</span>
+              <ArrowRight className="w-4 h-4 text-blue-900" />
+            </button>
 
-                <button
-                  onClick={() => navigateTo('contact')}
-                  className="bg-orange-600 hover:bg-orange-500 text-white font-bold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-orange-600/30 transition-all duration-200 text-sm tracking-wide uppercase inline-flex items-center gap-2"
-                >
-                  <PhoneCall className="w-4 h-4" />
-                  <span>{home.heroCtaSecondary || 'CONTACT US'}</span>
-                </button>
-              </div>
+            <button
+              onClick={() => navigateTo('contact')}
+              className="bg-orange-600 hover:bg-orange-500 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg hover:shadow-orange-600/30 transition-all duration-200 text-sm tracking-wide uppercase inline-flex items-center gap-2 cursor-pointer"
+            >
+              <PhoneCall className="w-4 h-4" />
+              <span>{home.heroCtaSecondary || 'CONTACT US'}</span>
+            </button>
 
-              {/* Quick Pillars Strip */}
-              <div className="pt-4 border-t border-blue-800/60 flex items-center gap-6 text-xs text-blue-200">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  <span>Nigerian & British Curriculum</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  <span>Lekki Peninsula Campus</span>
-                </div>
-              </div>
+            <a
+              href="https://wa.me/2348022872299?text=Hello%20Bright%20Star%20College%20Lekki%2C%20I%20would%20like%20to%20inquire%20about%20admissions."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold px-6 py-3.5 rounded-xl shadow-lg transition-all duration-200 text-sm tracking-wide uppercase inline-flex items-center gap-2 cursor-pointer"
+            >
+              <span>WHATSAPP US</span>
+            </a>
+          </div>
+
+          {/* Quick Pillars Strip */}
+          <div className="pt-4 border-t border-blue-800/60 flex flex-wrap items-center gap-6 text-xs text-blue-200">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span>Nigerian &amp; British Curriculum</span>
             </div>
-
-            {/* Hero Visual Area: Displays Official School Image OR Clean Branded Placeholder */}
-            <div className="lg:col-span-5">
-              {home.heroImageUrl ? (
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 aspect-4/3">
-                  <img
-                    src={home.heroImageUrl}
-                    alt={home.heroTitle}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <span className="text-xs font-bold text-amber-300 uppercase tracking-wider block">
-                      Bright Star College Campus
-                    </span>
-                    <span className="text-sm font-semibold text-white">
-                      Lekki, Lagos, Nigeria
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <BrandedPlaceholder
-                  title={schoolData.settings.schoolName || 'BRIGHT STAR COLLEGE'}
-                  subtitle="Lekki, Lagos, Nigeria · Excellence · Integrity · Discipline"
-                  aspect="hero"
-                />
-              )}
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span>15, Prince Ade Street, Peace Estate, Lekki</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span>Tel / WhatsApp: 08022872299</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* 2. ABOUT THE SCHOOL */}
-      <section id="about-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-6 space-y-5">
-            <div className="inline-flex items-center gap-2 text-xs font-bold tracking-wider text-orange-600 uppercase">
-              <span className="w-6 h-0.5 bg-orange-600" />
-              <span>ABOUT OUR COLLEGE</span>
+      <section id="about-section" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-xs space-y-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-950 tracking-tight">
+            {home.aboutTitle || 'Welcome to Bright Star College'}
+          </h2>
+
+          {/* OUR CLASSES */}
+          <div className="bg-gradient-to-r from-blue-900 to-indigo-950 rounded-2xl p-6 sm:p-7 text-white shadow-md border border-blue-800/60">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+              <h3 className="text-lg sm:text-xl font-black tracking-wider text-amber-300 uppercase">
+                OUR CLASSES
+              </h3>
             </div>
-
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-950 tracking-tight">
-              {home.aboutTitle || 'Welcome to Bright Star College'}
-            </h2>
-
-            <p className="text-base text-slate-600 leading-relaxed">
-              {home.aboutContent ||
-                'Bright Star College is committed to providing quality education, developing confident learners and preparing students for future success.'}
-            </p>
-
-            {/* Highlights List */}
-            {home.aboutHighlights && home.aboutHighlights.length > 0 && (
-              <div className="space-y-3 pt-2">
-                {home.aboutHighlights.map((highlight, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                    <span className="text-sm text-slate-700 font-medium">
-                      {highlight}
-                    </span>
-                  </div>
-                ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-4.5 hover:bg-white/15 transition-all">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">Basic Education</span>
+                  <span className="text-[11px] font-semibold bg-amber-400/20 text-amber-200 px-2.5 py-0.5 rounded-full">3 Years</span>
+                </div>
+                <h4 className="text-base sm:text-lg font-extrabold text-white mt-1">
+                  JUNIOR SECONDARY
+                </h4>
+                <p className="text-blue-100 text-sm font-semibold tracking-wide mt-1">
+                  ( JSS1 – JSS3 )
+                </p>
+                <p className="text-xs text-blue-200/80 mt-2 leading-relaxed">
+                  Solid foundation in science, arts, languages, and technical education preparing students for BECE certification.
+                </p>
               </div>
-            )}
 
-            <div className="pt-4 flex items-center gap-4">
-              <button
-                onClick={() => navigateTo('mission')}
-                className="bg-blue-900 hover:bg-blue-800 text-white font-semibold text-xs tracking-wide px-5 py-3 rounded-lg shadow-sm transition-colors uppercase inline-flex items-center gap-2"
-              >
-                <span>Read Full Mission & Vision</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-4.5 hover:bg-white/15 transition-all">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">Post-Basic Education</span>
+                  <span className="text-[11px] font-semibold bg-amber-400/20 text-amber-200 px-2.5 py-0.5 rounded-full">3 Years</span>
+                </div>
+                <h4 className="text-base sm:text-lg font-extrabold text-white mt-1">
+                  SENIOR SECONDARY
+                </h4>
+                <p className="text-blue-100 text-sm font-semibold tracking-wide mt-1">
+                  ( SSS1 – SSS3 )
+                </p>
+                <p className="text-xs text-blue-200/80 mt-2 leading-relaxed">
+                  Specialized academic tracks in Science, Arts, and Commercial departments preparing students for WAEC, NECO, and JAMB.
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6">
-            <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-6 sm:p-8 space-y-6">
-              <div className="border-b border-blue-200/80 pb-4">
-                <span className="text-xs font-bold text-amber-700 uppercase tracking-wider block">
-                  A Message to Prospective Parents
-                </span>
-                <h3 className="text-xl font-bold text-blue-950 mt-1">
-                  Nurturing Confident, Responsible Leaders in Lagos
-                </h3>
-              </div>
+          <p className="text-base text-slate-600 leading-relaxed">
+            {home.aboutContent ||
+              'Bright Star College is committed to providing quality education, developing confident learners and preparing students for future success.'}
+          </p>
 
-              <p className="text-sm text-slate-600 leading-relaxed">
-                We understand the aspirations of Nigerian families who seek rigorous academic grounding balanced with sound moral upbringing. At Bright Star College, we foster high standards of discipline, respectful collaboration, and academic curiosity.
-              </p>
-
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="p-4 bg-white rounded-xl border border-blue-100 shadow-xs">
-                  <span className="text-2xl font-black text-blue-900 block">Lekki</span>
-                  <span className="text-xs text-slate-500 font-medium">Safe & Accessible Location</span>
+          {/* Highlights List */}
+          {home.aboutHighlights && home.aboutHighlights.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+              {home.aboutHighlights.map((highlight, idx) => (
+                <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <span className="text-xs sm:text-sm text-slate-700 font-medium">
+                    {highlight}
+                  </span>
                 </div>
-                <div className="p-4 bg-white rounded-xl border border-blue-100 shadow-xs">
-                  <span className="text-2xl font-black text-orange-600 block">100%</span>
-                  <span className="text-xs text-slate-500 font-medium">Commitment to Every Child</span>
-                </div>
-              </div>
+              ))}
             </div>
+          )}
+
+          <div className="pt-4 flex items-center gap-4 border-t border-slate-100">
+            <button
+              onClick={() => navigateTo('mission')}
+              className="bg-blue-900 hover:bg-blue-800 text-white font-semibold text-xs tracking-wide px-6 py-3 rounded-xl shadow-xs transition-colors uppercase inline-flex items-center gap-2 cursor-pointer"
+            >
+              <span>Read Full Mission &amp; Vision</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </section>
@@ -223,9 +191,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
       <section className="bg-slate-100/70 py-16 border-y border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">
-              OUR DISTINCT ADVANTAGES
-            </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-950 mt-1">
               Why Choose Bright Star College
             </h2>
@@ -241,9 +206,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
                 className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center mb-4">
-                    {getIcon(feature.iconName)}
-                  </div>
                   <h3 className="text-lg font-bold text-blue-950">
                     {feature.title}
                   </h3>
@@ -263,12 +225,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
           {/* Mission Preview Card */}
           <div className="bg-linear-to-br from-blue-900 to-blue-950 text-white rounded-2xl p-8 shadow-md flex flex-col justify-between border border-blue-800">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-blue-800/80 border border-amber-400/40 flex items-center justify-center mb-4 text-amber-400">
-                <BookOpen className="w-6 h-6" />
-              </div>
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
-                CORE PURPOSE
-              </span>
               <h3 className="text-2xl font-bold text-white mt-1">
                 {mission.title || 'Our Mission'}
               </h3>
@@ -280,7 +236,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
             <div className="pt-6">
               <button
                 onClick={() => navigateTo('mission')}
-                className="inline-flex items-center gap-2 text-xs font-bold text-white bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-lg transition-colors uppercase tracking-wider"
+                className="inline-flex items-center gap-2 text-xs font-bold text-blue-950 bg-amber-500 hover:bg-amber-400 px-4 py-2.5 rounded-lg transition-colors uppercase tracking-wider"
               >
                 <span>Read More</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -291,12 +247,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
           {/* Vision Preview Card */}
           <div className="bg-linear-to-br from-slate-900 to-slate-950 text-white rounded-2xl p-8 shadow-md flex flex-col justify-between border border-slate-800">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-slate-800/80 border border-amber-400/40 flex items-center justify-center mb-4 text-amber-400">
-                <Compass className="w-6 h-6" />
-              </div>
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
-                FORWARD HORIZON
-              </span>
               <h3 className="text-2xl font-bold text-white mt-1">
                 {vision.title || 'Our Vision'}
               </h3>
@@ -308,7 +258,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
             <div className="pt-6">
               <button
                 onClick={() => navigateTo('vision')}
-                className="inline-flex items-center gap-2 text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 text-white px-4 py-2.5 rounded-lg transition-colors uppercase tracking-wider"
+                className="inline-flex items-center gap-2 text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 px-4 py-2.5 rounded-lg transition-colors uppercase tracking-wider"
               >
                 <span>Read More</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -322,9 +272,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
-            <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">
-              CAMPUS & STUDENT LIFE
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-blue-950 mt-1">
               School Gallery Preview
             </h2>
@@ -357,16 +304,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenLightbox }) => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-                <div className="absolute bottom-3 left-3 right-3 text-white">
-                  <span className="text-xs font-bold block truncate">
-                    {img.title}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="p-3 rounded-full bg-white/20 backdrop-blur-xs text-white border border-white/40 shadow-lg scale-90 group-hover:scale-100 transition-transform">
+                    <ArrowRight className="w-5 h-5" />
                   </span>
-                  {img.caption && (
-                    <span className="text-[11px] text-slate-200 truncate block">
-                      {img.caption}
-                    </span>
-                  )}
                 </div>
               </div>
             ))}

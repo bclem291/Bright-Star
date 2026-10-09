@@ -1,90 +1,54 @@
 import React from 'react';
 import { useSchool } from '../../context/SchoolContext';
-import { Star, Shield, MapPin, Phone, Mail, Clock, ArrowUpRight } from 'lucide-react';
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  MessageCircle
+} from 'lucide-react';
 
-interface FooterProps {
-  onOpenAdminLogin: () => void;
-}
+export const Footer: React.FC = () => {
+  const { schoolData, setActivePage } = useSchool();
 
-export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
-  const { schoolData, setActivePage, isAdminLoggedIn } = useSchool();
-
-  const handleNavClick = (page: string) => {
-    setActivePage(page);
+  const handleNavClick = (id: string) => {
+    setActivePage(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const socialLinks = schoolData.settings.socialLinks || {};
-  // Only keep social media links that have actual URLs entered by the administrator
-  const activeSocials = Object.entries(socialLinks).filter(
-    ([_, url]) => url && url.trim().length > 0 && !url.includes('example.com')
-  );
+  const rawWhatsapp = schoolData.settings.whatsappNumber || '08022872299';
+  const cleanWhatsapp = rawWhatsapp.replace(/[^0-9]/g, '');
 
   return (
-    <footer className="bg-slate-950 text-slate-300 border-t-4 border-orange-500">
-      {/* Upper Footer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Col 1: School Identity */}
-          <div className="space-y-4 lg:col-span-1">
+    <footer className="bg-slate-950 text-slate-300 border-t border-slate-900 select-none">
+      {/* Main Footer Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+          {/* Col 1: Brand & Identity */}
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
-              {schoolData.settings.logoUrl ? (
-                <img
-                  src={schoolData.settings.logoUrl}
-                  alt={schoolData.settings.schoolName}
-                  className="h-12 w-auto object-contain rounded-md bg-white p-1"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-xl bg-linear-to-b from-blue-900 to-blue-950 border border-amber-400/80 flex flex-col items-center justify-center text-white shrink-0">
-                  <div className="flex items-center gap-0.5 text-amber-400 -mb-0.5">
-                    <Star className="w-2.5 h-2.5 fill-amber-400" />
-                    <Shield className="w-3.5 h-3.5 text-amber-400" />
-                    <Star className="w-2.5 h-2.5 fill-amber-400" />
-                  </div>
-                  <span className="font-extrabold text-sm tracking-wider">BSC</span>
-                </div>
-              )}
-              <div>
-                <h4 className="font-extrabold text-base text-white tracking-tight">
-                  {schoolData.settings.schoolName || 'BRIGHT STAR COLLEGE'}
-                </h4>
-                <p className="text-xs text-amber-400 font-medium">Lekki, Lagos, Nigeria</p>
-              </div>
+              <img
+                src={schoolData.settings.logoUrl || "https://i.ibb.co/vCJKQJg9/brihgt-star.png"}
+                alt={schoolData.settings.schoolName || "Bright Star College"}
+                className="h-12 w-auto object-contain rounded-md bg-white p-1"
+              />
+              <span className="font-extrabold text-base text-white tracking-tight leading-tight">
+                {schoolData.settings.schoolName || 'BRIGHT STAR COLLEGE'}
+              </span>
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed">
-              {schoolData.settings.tagline}
+              {schoolData.settings.tagline || 'Building Bright Minds for a Brighter Future'}
             </p>
 
-            <div className="pt-2 text-xs text-slate-400">
-              <span className="font-semibold text-slate-300">Motto: </span>
-              <span className="italic text-amber-300">{schoolData.settings.motto}</span>
-            </div>
-
-            {/* Official Social Links (Rendered ONLY if provided by admin) */}
-            {activeSocials.length > 0 && (
-              <div className="pt-2">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Official Channels
-                </p>
-                <div className="flex items-center gap-3">
-                  {activeSocials.map(([platform, url]) => (
-                    <a
-                      key={platform}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-2.5 py-1 text-xs rounded bg-slate-900 hover:bg-blue-900 text-slate-300 hover:text-white border border-slate-800 transition-colors capitalize"
-                    >
-                      {platform}
-                    </a>
-                  ))}
-                </div>
+            <div className="pt-2">
+              <div className="inline-block px-3 py-1.5 rounded-lg bg-blue-950/70 border border-blue-900 text-amber-300 text-xs font-semibold">
+                Lekki, Lagos · Nigeria
               </div>
-            )}
+            </div>
           </div>
 
-          {/* Col 2: Navigation Links */}
+          {/* Col 2: Quick Links */}
           <div className="space-y-3">
             <h5 className="text-sm font-bold text-white tracking-wider uppercase border-b border-slate-800 pb-2">
               Quick Navigation
@@ -93,7 +57,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
               <li>
                 <button
                   onClick={() => handleNavClick('home')}
-                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>Home</span>
                 </button>
@@ -101,23 +65,23 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
               <li>
                 <button
                   onClick={() => handleNavClick('mission')}
-                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>Our Mission</span>
+                  <span>Mission</span>
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => handleNavClick('vision')}
-                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>Our Vision</span>
+                  <span>Vision</span>
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => handleNavClick('gallery')}
-                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>School Gallery</span>
                 </button>
@@ -125,29 +89,32 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
               <li>
                 <button
                   onClick={() => handleNavClick('contact')}
-                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                  className="hover:text-amber-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>Contact & Admissions</span>
+                  <span>Contact &amp; Admissions</span>
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Academic & Campus Overview */}
+          {/* Col 3: Academic Excellence */}
           <div className="space-y-3">
             <h5 className="text-sm font-bold text-white tracking-wider uppercase border-b border-slate-800 pb-2">
-              Academic Standards
+              Academic Excellence
             </h5>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Bright Star College is committed to delivering qualitative education in Lekki, combining British and Nigerian educational standards to prepare students for academic excellence and ethical leadership.
+              Bright Star College is committed to delivering qualitative education in Lekki, combining Nigerian and British educational curricula to prepare students for leadership, integrity, and future success.
             </p>
-            <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800/80">
-              <span className="text-[11px] font-semibold text-amber-400 block mb-1">
-                Admissions Policy
-              </span>
-              <span className="text-[11px] text-slate-400">
-                Open to prospective students across Lagos and Nigeria seeking disciplined, quality secondary education.
-              </span>
+            <div className="pt-2">
+              <a
+                href={`https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent('Hello Bright Star College Admissions, I would like to make an inquiry.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebd5a] text-white text-xs font-bold px-3.5 py-2 rounded-lg transition-colors shadow-xs"
+              >
+                <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                <span>Chat Admissions on WhatsApp</span>
+              </a>
             </div>
           </div>
 
@@ -160,19 +127,33 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>
-                  {schoolData.settings.address || 'Lekki'}, {schoolData.settings.cityState || 'Lagos, Nigeria'}
+                  15, Prince Ade street, PEACE ESTATE, Lekki, Lagos
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span className="break-words">
-                  {schoolData.settings.phonePlaceholder}
-                </span>
+                <a
+                  href="tel:08022872299"
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  08022872299
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <a
+                  href={`https://wa.me/${cleanWhatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-300 transition-colors"
+                >
+                  WhatsApp: 08022872299
+                </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span className="break-all">
-                  {schoolData.settings.emailPlaceholder}
+                  {schoolData.settings.emailPlaceholder || 'info@brightstarcollege.ng'}
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
@@ -194,21 +175,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => {
-                if (isAdminLoggedIn) {
-                  setActivePage('admin');
-                } else {
-                  onOpenAdminLogin();
-                }
-              }}
-              className="text-slate-400 hover:text-amber-400 transition-colors flex items-center gap-1 text-[11px]"
-            >
-              <span>{isAdminLoggedIn ? 'Admin Dashboard' : 'Staff Portal'}</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </button>
-            <span className="text-slate-700">·</span>
-            <span>Lekki, Lagos State, Nigeria</span>
+            <span>15, Prince Ade street, PEACE ESTATE, Lekki, Lagos</span>
           </div>
         </div>
       </div>

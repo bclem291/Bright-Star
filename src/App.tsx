@@ -54,9 +54,7 @@ const AppContent: React.FC = () => {
       />
 
       {/* Main Public Navbar (hidden inside Admin Console for focused workspace) */}
-      {!isCurrentAdminPage && (
-        <Navbar onOpenAdminLogin={() => setActivePage('admin-login')} />
-      )}
+      {!isCurrentAdminPage && <Navbar />}
 
       {/* Main Content Router */}
       <main className="flex-1">
@@ -82,9 +80,7 @@ const AppContent: React.FC = () => {
       </main>
 
       {/* Footer on Public Pages */}
-      {!isCurrentAdminPage && !isCurrentLoginPage && (
-        <Footer onOpenAdminLogin={() => setActivePage('admin-login')} />
-      )}
+      {!isCurrentAdminPage && !isCurrentLoginPage && <Footer />}
 
       {/* Fullscreen Photo Lightbox Modal */}
       {lightboxIndex !== null && schoolData.gallery.length > 0 && (
@@ -99,7 +95,7 @@ const AppContent: React.FC = () => {
       {/* System Toast Alerts */}
       <ToastContainer />
 
-      {/* Floating School WhatsApp & AI Assistant Widget */}
+      {/* Floating School WhatsApp Button */}
       {!isCurrentAdminPage && <FloatingHelpWidget />}
     </div>
   );

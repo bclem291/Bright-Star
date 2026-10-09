@@ -5,17 +5,16 @@ export const initialSchoolData: SchoolData = {
     schoolName: "BRIGHT STAR COLLEGE",
     tagline: "Building Bright Minds for a Brighter Future",
     motto: "Excellence · Integrity · Discipline",
-    logoUrl: "", // Empty: uses the professional text-based 'BSC' crest badge
-    address: "Lekki Peninsula Corridor",
-    cityState: "Lekki, Lagos State",
+    logoUrl: "https://i.ibb.co/vCJKQJg9/brihgt-star.png",
+    address: "15, Prince Ade street, PEACE ESTATE",
+    cityState: "Lekki, Lagos",
     country: "Nigeria",
-    phonePlaceholder: "+234 (0) 800 000 0000 / +234 (0) 801 234 5678",
-    emailPlaceholder: "info@brightstarcollege.ng / admissions@brightstarcollege.ng",
-    whatsappNumber: "+2348000000000",
+    phonePlaceholder: "08022872299",
+    emailPlaceholder: "Bclem291@gmail.com",
+    whatsappNumber: "08022872299",
     officeHours: "Monday – Friday: 7:30 AM – 4:30 PM",
-    mapQuery: "Lekki, Lagos, Nigeria",
+    mapQuery: "15 Prince Ade Street, Peace Estate, Lekki, Lagos, Nigeria",
     socialLinks: {
-      // Intentionally empty until official school accounts are configured
       facebook: "",
       instagram: "",
       twitter: "",
@@ -26,16 +25,16 @@ export const initialSchoolData: SchoolData = {
   },
   home: {
     heroTitle: "Building Bright Minds for a Brighter Future",
-    heroSubtitle: "Providing qualitative education in a nurturing, disciplined, and technologically enriched learning environment in Lekki, Lagos. Empowering young leaders for global relevance and personal integrity.",
+    heroSubtitle: "Providing qualitative education in a nurturing, disciplined, and technologically enriched learning environment in Peace Estate, Lekki, Lagos. Empowering young leaders for global relevance and personal integrity.",
     heroCtaPrimary: "LEARN MORE",
     heroCtaSecondary: "CONTACT US",
     heroImageUrl: "https://i.ibb.co/PvLmXqc3/312891.jpg",
     aboutTitle: "Welcome to Bright Star College",
     aboutSubtitle: "Dedicated to Academic Distinction and Moral Integrity",
-    aboutContent: "Bright Star College, Lekki, Lagos is committed to providing quality education, developing confident learners, and preparing students for future success. In a rapidly evolving world, we combine rigorous academic foundations with sound character formation, moral discipline, and 21st-century problem-solving capabilities. Our school community fosters curiosity, mutual respect, and high personal standards, ensuring that every learner discovers their unique potential.",
+    aboutContent: "Bright Star College, located at 15, Prince Ade street, PEACE ESTATE, Lekki, Lagos, is committed to providing quality education, developing confident learners, and preparing students for future success. In a rapidly evolving world, we combine rigorous academic foundations with sound character formation, moral discipline, and 21st-century problem-solving capabilities. Our school community fosters curiosity, mutual respect, and high personal achievement, ensuring that every learner discovers their unique potential.",
     aboutHighlights: [
       "Rigorous British and Nigerian national curriculum integration",
-      "Disciplined, secure, and serene learning environment in Lekki",
+      "Disciplined, secure, and serene learning environment in Peace Estate, Lekki",
       "Emphasis on character formation, civic responsibility, and moral leadership",
       "Individualized student support and comprehensive pastoral care",
       "Modern science, ICT, and creative arts learning facilities"
@@ -44,7 +43,7 @@ export const initialSchoolData: SchoolData = {
       {
         id: "feat-1",
         title: "Quality Education",
-        description: "A well-rounded academic curriculum blending Nigerian and international standards designed to ignite intellectual curiosity and mastery.",
+        description: "A well-rounded academic curriculum blending Nigerian and international curricula designed to ignite intellectual curiosity and mastery.",
         iconName: "GraduationCap"
       },
       {
@@ -61,82 +60,173 @@ export const initialSchoolData: SchoolData = {
       },
       {
         id: "feat-4",
-        title: "Character Development",
-        description: "Instilling timeless values of integrity, empathy, personal discipline, and respect across all curricular and extracurricular activities.",
-        iconName: "HeartHandshake"
+        title: "Modern Laboratories & ICT",
+        description: "Fully-equipped science labs, computer suites, and interactive digital teaching tools enhancing empirical exploration.",
+        iconName: "Compass"
       },
       {
         id: "feat-5",
-        title: "Modern Learning Approach",
-        description: "Practical STEM laboratories, digital literacy, and collaborative classroom methodologies preparing students for the 21st century.",
-        iconName: "Sparkles"
+        title: "Moral Integrity & Leadership",
+        description: "Core emphasis on building strong character, ethical values, leadership qualities, and personal accountability.",
+        iconName: "Heart"
       },
       {
         id: "feat-6",
-        title: "Student-Centred Education",
-        description: "Prioritising each child's individual pace, strengths, and talents through attentive mentoring and tailored enrichment.",
-        iconName: "Award"
+        title: "Co-Curricular Excellence",
+        description: "Dynamic opportunities in athletics, debate, arts, music, and vocational clubs for holistic adolescent development.",
+        iconName: "Trophy"
       }
     ],
-    contactCtaTitle: "Give Your Child a Bright Future",
-    contactCtaSubtitle: "Enrollment inquiries and campus visit reservations for Bright Star College are now open. Speak with our admissions team today."
+    contactCtaTitle: "Begin Your Child's Journey at Bright Star College",
+    contactCtaSubtitle: "Admissions are currently ongoing for the upcoming academic session. Connect with our admissions office to schedule a campus tour or receive application materials."
   },
   mission: {
     title: "Our Mission",
-    leadStatement: "To cultivate an inspiring, disciplined, and inclusive educational atmosphere where every child attains academic excellence, demonstrates moral integrity, and develops critical thinking skills to positively impact their community and the world.",
+    leadStatement: "To provide holistic, high-quality education that nurtures intellectual curiosity, fosters moral integrity, and equips students with the knowledge, skills, and values needed to thrive and lead with distinction in a dynamic global society.",
     fullContent: "At Bright Star College, our mission is rooted in the belief that education is the foundation for individual empowerment and societal progress. We exist to deliver comprehensive education that stimulates intellectual rigor, moral uprightness, creative inquiry, and civic responsibility. We partner closely with parents and guardians to guide students into becoming resilient, ethical, and self-motivated global citizens who lead with honour and purpose.",
     pillars: [
       {
-        title: "Academic Excellence",
-        description: "Challenging every student to achieve their highest intellectual potential through conceptual understanding and disciplined study habits."
+        title: "Academic Rigour & Critical Inquiry",
+        description: "Cultivating sharp analytical minds through experiential instruction, hands-on lab experiments, and comprehensive secondary school preparation."
       },
       {
-        title: "Character & Discipline",
-        description: "Cultivating respect, punctuality, integrity, and personal accountability as daily core habits of mind."
+        title: "Character & Ethical Foundation",
+        description: "Instilling timeless moral values, honesty, empathy, and personal responsibility in every learner as cornerstone traits for life."
       },
       {
-        title: "Creativity & Critical Thinking",
-        description: "Encouraging learners to question constructively, analyse critically, and innovate creative solutions to real-world challenges."
+        title: "Technological Fluency & STEM",
+        description: "Preparing students for modern careers through practical digital literacy, computer science, and innovative problem-solving labs."
       },
       {
-        title: "Responsible Citizenship",
-        description: "Instilling deep appreciation for community service, cultural diversity, and responsible contribution to Nigerian society and the wider world."
+        title: "Holistic Development & Well-being",
+        description: "Nurturing physical health, creative arts, emotional balance, and co-curricular talents in an inclusive, supportive atmosphere."
       },
       {
-        title: "Future Readiness",
-        description: "Equipping learners with digital literacy, communication dexterity, and adaptability essential for higher education and future careers."
+        title: "Civic Leadership & Global Outlook",
+        description: "Inspiring students to serve their communities honourably while developing the intercultural perspectives required on the global stage."
       }
     ],
     lastUpdated: new Date().toLocaleDateString('en-GB')
   },
   vision: {
     title: "Our Vision",
-    leadStatement: "To be a benchmark of educational distinction in Lagos and Nigeria, renowned for raising confident, creative, and principled leaders poised to excel on both national and international stages.",
-    fullContent: "Our vision is to build an enduring citadel of learning where students are transformed into independent thinkers, ethical problem solvers, and lifelong scholars. We envision a community where tradition and innovation meet—where high academic standards coexist harmoniously with compassionate character building, producing graduates who stand as beacons of hope and excellence wherever they go.",
+    leadStatement: "To be recognized as a premier citadel of learning in Lekki and across Nigeria, celebrated for academic excellence, moral rectitude, and the development of enlightened, transformative leaders who illuminate their world.",
+    fullContent: "Our vision is to build an enduring institution that sets benchmark standards for secondary education in Lagos State and throughout Nigeria. We envision Bright Star College as a sanctuary where raw potential is systematically transformed into refined competence, where students are inspired to dream expansively, think independently, and act honourably. We strive to be the school of first choice for discerning families seeking an uncompromising blend of academic distinction, disciplined character formation, and forward-looking leadership development.",
     coreOutcomes: [
       {
-        title: "Confident Learners",
-        description: "Students who trust in their abilities, articulate their perspectives with poise, and approach unfamiliar challenges without fear."
+        title: "Confident Communicators",
+        description: "Articulate speakers and persuasive writers capable of expressing ideas with clarity, conviction, and poise across multiple media."
       },
       {
         title: "Responsible Citizens",
-        description: "Individuals who value community welfare, show empathy toward others, and uphold ethical principles in all actions."
+        description: "Ethically grounded individuals committed to social justice, community uplift, environmental stewardship, and patriotic service."
       },
       {
-        title: "Future Leaders",
-        description: "Visionary thinkers equipped with moral clarity, teamwork capabilities, and the resilience to guide others constructively."
+        title: "Adaptive Leaders",
+        description: "Principled decision-makers who inspire collaboration, navigate complex challenges with calm resilience, and act with integrity."
       },
       {
-        title: "Creative Thinkers",
+        title: "Innovative Problem-Solvers",
         description: "Inventive minds capable of thinking outside conventional boundaries, synthesising ideas, and pioneering resourceful solutions."
       },
       {
-        title: "Lifelong Learners",
+        title: "Dedicated Scholars",
         description: "Graduates possessing insatiable intellectual curiosity, self-discipline, and a persistent drive for continual self-improvement."
       }
     ],
     lastUpdated: new Date().toLocaleDateString('en-GB')
   },
-  gallery: [], // Initial state: strictly no random stock images! Ready for administrator upload
-  videos: []   // Initial state: strictly no random YouTube videos! Ready for administrator upload
+  gallery: [
+    {
+      id: "gal-1",
+      url: "https://i.ibb.co/chwQ44Lm/1.jpg",
+      title: "BRIGHT STAR COLLEGE",
+      caption: "",
+      altText: "BRIGHT STAR COLLEGE",
+      uploadedAt: "",
+      category: "BRIGHT STAR COLLEGE"
+    },
+    {
+      id: "gal-2",
+      url: "https://i.ibb.co/twXW5Jwx/2.jpg",
+      title: "Cross section of students",
+      caption: "",
+      altText: "Cross section of students",
+      uploadedAt: "",
+      category: "Cross section of students"
+    },
+    {
+      id: "gal-3",
+      url: "https://i.ibb.co/B8wqzhG/3.jpg",
+      title: "LABS",
+      caption: "",
+      altText: "LABS",
+      uploadedAt: "",
+      category: "LABS"
+    },
+    {
+      id: "gal-4",
+      url: "https://i.ibb.co/JWJKKj73/4.jpg",
+      title: "ICT",
+      caption: "",
+      altText: "ICT",
+      uploadedAt: "",
+      category: "ICT"
+    },
+    {
+      id: "gal-5",
+      url: "https://i.ibb.co/Z1BRdQtX/5.jpg",
+      title: "Library",
+      caption: "",
+      altText: "Library",
+      uploadedAt: "",
+      category: "Library"
+    },
+    {
+      id: "gal-6",
+      url: "https://i.ibb.co/RT28JXKK/6.jpg",
+      title: "students",
+      caption: "",
+      altText: "students",
+      uploadedAt: "",
+      category: "students"
+    },
+    {
+      id: "gal-7",
+      url: "https://i.ibb.co/ksRLrtPN/7.jpg",
+      title: "students",
+      caption: "",
+      altText: "students",
+      uploadedAt: "",
+      category: "students"
+    },
+    {
+      id: "gal-8",
+      url: "https://i.ibb.co/pv6sPrRD/8.jpg",
+      title: "Library",
+      caption: "",
+      altText: "Library",
+      uploadedAt: "",
+      category: "Library"
+    },
+    {
+      id: "gal-9",
+      url: "https://i.ibb.co/tpmZgsXc/9.jpg",
+      title: "students",
+      caption: "",
+      altText: "students",
+      uploadedAt: "",
+      category: "students"
+    },
+    {
+      id: "gal-10",
+      url: "https://i.ibb.co/4w4pdjMF/10.jpg",
+      title: "students",
+      caption: "",
+      altText: "students",
+      uploadedAt: "",
+      category: "students"
+    }
+  ],
+  videos: []
 };

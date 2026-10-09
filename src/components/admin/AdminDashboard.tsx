@@ -1149,10 +1149,12 @@ export const AdminDashboard: React.FC = () => {
                           onChange={(e) => setImageCategory(e.target.value)}
                           className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white"
                         >
-                          <option value="Campus Life">Campus Life</option>
-                          <option value="Academics & Labs">Academics & Labs</option>
-                          <option value="Sports & Athletics">Sports & Athletics</option>
-                          <option value="Events & Assemblies">Events & Assemblies</option>
+                          <option value="BRIGHT STAR COLLEGE">BRIGHT STAR COLLEGE</option>
+                          <option value="Cross section of students">Cross section of students</option>
+                          <option value="LABS">LABS</option>
+                          <option value="ICT">ICT</option>
+                          <option value="Library">Library</option>
+                          <option value="students">students</option>
                         </select>
                       </div>
                     </div>
